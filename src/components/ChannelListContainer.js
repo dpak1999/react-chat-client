@@ -1,8 +1,11 @@
 /** @format */
 
+import { ChannelList } from 'stream-chat-react';
 import Logo from '../assets/logo.png';
 import Logout from '../assets/logout.png';
 import ChannelSearch from './ChannelSearch';
+import TeamChannelList from './TeamChannelList';
+import TeamChannelPreview from './TeamChannelPreview';
 
 const Sidebar = () => (
   <div className="channel-list__sidebar">
@@ -32,6 +35,24 @@ const ChannelListContainer = () => {
       <div className="channel-list__list__wrapper">
         <Header />
         <ChannelSearch />
+        <ChannelList
+          filters={{}}
+          channelRenderFilterFn={() => {}}
+          List={(listProps) => <TeamChannelList {...listProps} type="team" />}
+          Preview={(previewProps) => (
+            <TeamChannelPreview {...previewProps} type="team" />
+          )}
+        />
+        <ChannelList
+          filters={{}}
+          channelRenderFilterFn={() => {}}
+          List={(listProps) => (
+            <TeamChannelList {...listProps} type="messaging" />
+          )}
+          Preview={(previewProps) => (
+            <TeamChannelPreview {...previewProps} type="messaging" />
+          )}
+        />
       </div>
     </>
   );
