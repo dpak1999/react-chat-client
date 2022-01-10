@@ -2,6 +2,7 @@
 
 import Logo from '../assets/logo.png';
 import Logout from '../assets/logout.png';
+import ChannelSearch from './ChannelSearch';
 
 const Sidebar = () => (
   <div className="channel-list__sidebar">
@@ -30,6 +31,7 @@ const ChannelListContainer = () => {
       <Sidebar />
       <div className="channel-list__list__wrapper">
         <Header />
+        <ChannelSearch />
       </div>
     </>
   );
