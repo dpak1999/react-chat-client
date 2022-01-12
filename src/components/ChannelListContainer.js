@@ -1,13 +1,14 @@
 /** @format */
 
 import { ChannelList } from 'stream-chat-react';
+import Cookies from 'universal-cookie';
 import Logo from '../assets/logo.png';
 import Logout from '../assets/logout.png';
 import ChannelSearch from './ChannelSearch';
 import TeamChannelList from './TeamChannelList';
 import TeamChannelPreview from './TeamChannelPreview';
 
-const Sidebar = () => (
+const Sidebar = ({ logout }) => (
   <div className="channel-list__sidebar">
     <div className="channel-list__sidebar__icon1">
       <div className="icon1__inner">
@@ -15,7 +16,7 @@ const Sidebar = () => (
       </div>
     </div>
     <div className="channel-list__sidebar__icon2">
-      <div className="icon1__inner">
+      <div className="icon1__inner" onClick={logout}>
         <img src={Logout} alt="logout" width="30" />
       </div>
     </div>
@@ -28,10 +29,24 @@ const Header = () => (
   </div>
 );
 
+const cookies = new Cookies();
+
 const ChannelListContainer = () => {
+  const logout = () => {
+    cookies.remove('userId');
+    cookies.remove('username');
+    cookies.remove('fullName');
+    cookies.remove('avatarURL');
+    cookies.remove('hashedPassword');
+    cookies.remove('phoneNumber');
+    cookies.remove('token');
+
+    window.location.reload();
+  };
+
   return (
     <>
-      <Sidebar />
+      <Sidebar logout={logout} />
       <div className="channel-list__list__wrapper">
         <Header />
         <ChannelSearch />
