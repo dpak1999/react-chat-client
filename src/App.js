@@ -7,7 +7,6 @@ import Cookies from 'universal-cookie';
 import Auth from './components/Auth';
 import ChannelContainer from './components/ChannelContainer';
 import ChannelListContainer from './components/ChannelListContainer';
-import 'stream-chat-react/dist/css/index.css';
 
 const apiKey = process.env.REACT_APP_STREAM_API_KEY;
 const client = StreamChat.getInstance(apiKey);
@@ -38,7 +37,7 @@ function App() {
 
   return (
     <div className="app__wrapper">
-      <Chat client={client} darkMode>
+      <Chat client={client} theme="team light">
         <ChannelListContainer
           isCreating={isCreating}
           setIsCreating={setIsCreating}
