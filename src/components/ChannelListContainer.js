@@ -1,6 +1,7 @@
 /** @format */
 
-import { ChannelList } from 'stream-chat-react';
+import { useState } from 'react';
+import { ChannelList, useChatContext } from 'stream-chat-react';
 import Cookies from 'universal-cookie';
 import Logo from '../assets/logo.png';
 import Logout from '../assets/logout.png';
@@ -29,14 +30,24 @@ const Header = () => (
   </div>
 );
 
+const CustomChannelTeamFilter = (channels) => {
+  return channels.filter((channel) => channel.type === 'team');
+};
+
+const CustomChannelMessagingFilter = (channels) => {
+  return channels.filter((channel) => channel.type === 'messaging');
+};
+
 const cookies = new Cookies();
 
-const ChannelListContainer = ({
+const ChannelListContent = ({
   isCreating,
   setIsCreating,
   setCreateType,
   setIsEditing,
+  setToggleContainer,
 }) => {
+  const { client } = useChatContext();
   const logout = () => {
     cookies.remove('userId');
     cookies.remove('username');
@@ -49,6 +60,8 @@ const ChannelListContainer = ({
     window.location.reload();
   };
 
+  const filters = { members: { $in: [client.userID] } };
+
   return (
     <>
       <Sidebar logout={logout} />
@@ -56,8 +69,8 @@ const ChannelListContainer = ({
         <Header />
         <ChannelSearch />
         <ChannelList
-          filters={{}}
-          channelRenderFilterFn={() => {}}
+          filters={filters}
+          channelRenderFilterFn={CustomChannelTeamFilter}
           List={(listProps) => (
             <TeamChannelList
               {...listProps}
@@ -66,15 +79,22 @@ const ChannelListContainer = ({
               setIsCreating={setIsCreating}
               setCreateType={setCreateType}
               setIsEditing={setIsEditing}
+              setToggleContainer={setToggleContainer}
             />
           )}
           Preview={(previewProps) => (
-            <TeamChannelPreview {...previewProps} type="team" />
+            <TeamChannelPreview
+              {...previewProps}
+              type="team"
+              setToggleContainer={setToggleContainer}
+              setIsCreating={setIsCreating}
+              setIsEditing={setIsEditing}
+            />
           )}
         />
         <ChannelList
-          filters={{}}
-          channelRenderFilterFn={() => {}}
+          filters={filters}
+          channelRenderFilterFn={CustomChannelMessagingFilter}
           List={(listProps) => (
             <TeamChannelList
               {...listProps}
@@ -83,12 +103,59 @@ const ChannelListContainer = ({
               setIsCreating={setIsCreating}
               setCreateType={setCreateType}
               setIsEditing={setIsEditing}
+              setToggleContainer={setToggleContainer}
             />
           )}
           Preview={(previewProps) => (
-            <TeamChannelPreview {...previewProps} type="messaging" />
+            <TeamChannelPreview
+              {...previewProps}
+              type="messaging"
+              setToggleContainer={setToggleContainer}
+              setIsCreating={setIsCreating}
+              setIsEditing={setIsEditing}
+            />
           )}
         />
+      </div>
+    </>
+  );
+};
+
+const ChannelListContainer = ({
+  setCreateType,
+  setIsCreating,
+  setIsEditing,
+}) => {
+  const [toggleContainer, setToggleContainer] = useState(false);
+
+  return (
+    <>
+      <div className="channel-list__container">
+        <ChannelListContent
+          setIsCreating={setIsCreating}
+          setCreateType={setCreateType}
+          setIsEditing={setIsEditing}
+        />
+      </div>
+
+      <div
+        className="channel-list__container-responsive"
+        style={{
+          left: toggleContainer ? '0%' : '-89%',
+          backgroundColor: '#005fff',
+        }}
+      >
+        <div
+          className="channel-list__container-toggle"
+          onClick={(prev) => setToggleContainer(!prev)}
+        >
+          <ChannelListContent
+            setToggleContainer={setToggleContainer}
+            setIsCreating={setIsCreating}
+            setCreateType={setCreateType}
+            setIsEditing={setIsEditing}
+          />
+        </div>
       </div>
     </>
   );
