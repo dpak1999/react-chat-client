@@ -25,7 +25,7 @@ const Auth = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { username, password, phoneNumber, avatarURL } = form;
-    const URL = 'http://localhost:8000/auth';
+    const URL = 'https://react-chat-dpak.herokuapp.com/auth';
 
     const {
       data: { token, userId, hashedPassword, fullName },
